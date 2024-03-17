@@ -9,13 +9,12 @@
 <body>
     <div class="content">
         <div class="navbar">
-            <a href="#">Agregar</a>
-            <a href="#">Editar</a>
-            <a href="#" class="active">Eliminar</a>
-            <a href="#">Ventas</a>
+            <a href="agregar.html">Agregar</a>
+            <a href="eliminar-eliminar.html" class="active">Gestión de Productos</a>
+            <a href="index.html">Ventas</a>
         </div>
 
-        <!-- La tabla para la eliminación de productos -->
+        <!-- La tabla para editar o eliminar productos -->
         <table>
             <thead>
                 <tr>
@@ -24,24 +23,27 @@
                     <th>Precio</th>
                     <th>Cantidad</th>
                     <th>Importe</th>
-                    <th>Eliminar</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
-                <!-- Los productos se añadirán aquí. Ejemplo de fila con botón de eliminar -->
+                <!-- Los productos se añadirán aquí. Ejemplo de fila con botones de editar y eliminar -->
                 <tr>
                     <td>0001</td>
                     <td>Producto Ejemplo</td>
                     <td>$10.00</td>
                     <td>1</td>
                     <td>$10.00</td>
-                    <td><button class="btn-action delete">Eliminar</button></td>
+                    <td>
+                        <button class="btn-action edit">Editar</button>
+                        <button class="btn-action delete">Eliminar</button>
+                    </td>
                 </tr>
                 <!-- Repite las filas según los productos que tengas -->
             </tbody>
         </table>
         
-        <!-- No es necesaria la sección de footer con el botón de cobrar para eliminar -->
+        <!-- Otras secciones del sitio si son necesarias -->
     </div>
 </body>
 </html>
