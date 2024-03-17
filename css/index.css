@@ -7,7 +7,7 @@ body {
 
 .content {
     width: 80%;
-    max-width: 900px;
+    max-width: 1200px;
     margin: auto;
     padding: 20px;
     background-color: white;
@@ -42,8 +42,11 @@ body {
 }
 
 .product-form {
-    padding: 20px;
+    padding-top: 20px; /* Solo afecta al padding superior */
+    padding-bottom: 20px; /* Mantiene el padding inferior como estaba, si es necesario */
+    padding-right: 20px;
 }
+
 
 .product-action {
     display: flex;
@@ -70,6 +73,11 @@ body {
 }
 
 .add {
+    background-color: #3498db;
+    color: white;
+}
+
+.search {
     background-color: #3498db;
     color: white;
 }
@@ -156,3 +164,8 @@ tr:nth-child(even) {
     padding: 10px 40px; /* Espaciado interno del botón */
 }
 
+td input[type="radio"] {
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
