@@ -20,26 +20,42 @@ body {
     overflow: hidden;
     border-bottom: 1px solid #ccc;
     border-radius: 5px 5px 0 0;
+    display: flex; /* Utiliza flexbox */
+    justify-content: space-between; /* Distribuye los elementos a lo largo del contenedor */
+    align-items: center; /* Centra verticalmente los elementos */
 }
 
-.navbar a {
-    float: left;
-    display: block;
+.navbar-left {
+    display: flex; /* Utiliza flexbox */
+}
+
+.navbar-left a {
     color: black;
     text-align: center;
     padding: 14px 16px;
     text-decoration: none;
 }
 
-.navbar a:hover {
-    background-color: #ddd;
+.navbar-right a {
     color: black;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.navbar-right a.logout {
+    padding-right: 20px; /* Agrega un espacio entre los elementos de la barra de navegación */
 }
 
 .navbar a.active {
     background-color: #3498db;
     color: white;
 }
+.navbar a.logout {
+    background-color: #e74c3c;
+    color: white;
+}
+
 
 .product-form {
     padding-top: 20px; /* Solo afecta al padding superior */
