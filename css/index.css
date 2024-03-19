@@ -20,13 +20,13 @@ body {
     overflow: hidden;
     border-bottom: 1px solid #ccc;
     border-radius: 5px 5px 0 0;
-    display: flex; /* Utiliza flexbox */
+    display: flex; 
     justify-content: space-between; /* Distribuye los elementos a lo largo del contenedor */
     align-items: center; /* Centra verticalmente los elementos */
 }
 
 .navbar-left {
-    display: flex; /* Utiliza flexbox */
+    display: flex; 
 }
 
 .navbar-left a {
@@ -44,7 +44,7 @@ body {
 }
 
 .navbar-right a.logout {
-    padding-right: 20px; /* Agrega un espacio entre los elementos de la barra de navegación */
+    padding-right: 20px; 
 }
 
 .navbar a.active {
@@ -58,8 +58,8 @@ body {
 
 
 .product-form {
-    padding-top: 20px; /* Solo afecta al padding superior */
-    padding-bottom: 20px; /* Mantiene el padding inferior como estaba, si es necesario */
+    padding-top: 20px; 
+    padding-bottom: 20px; /* inferior*/
     padding-right: 20px;
 }
 
@@ -153,19 +153,19 @@ tr:nth-child(even) {
 }
 
 .form-group {
-    margin-bottom: 10px; /* Espacio entre las filas del formulario */
+    margin-bottom: 10px; /* Espacio entre las filas  */
 }
 
 .form-group label {
-    display: block; /* Asegura que la etiqueta esté sobre el campo de entrada */
+    display: block; /* Asegura que la etiqueta este sobre el campo de entrada */
     margin-bottom: 5px; /* Espacio entre la etiqueta y el campo de entrada */
     text-align: left;
 }
 
 .input-field {
-    width: 100%; /* Ocupa el ancho total del contenedor */
-    padding: 10px; /* Espaciado interno */
-    border: 1px solid #ccc; /* Borde del campo de entrada */
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
     border-radius: 4px; /* Bordes redondeados del campo de entrada */
     font-size: 16px; /* Tamaño de fuente */
 }
