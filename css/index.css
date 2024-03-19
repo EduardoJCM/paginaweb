@@ -20,22 +20,16 @@ body {
     overflow: hidden;
     border-bottom: 1px solid #ccc;
     border-radius: 5px 5px 0 0;
-    display: flex; 
-    justify-content: space-between; /* Distribuye los elementos a lo largo del contenedor */
-    align-items: center; /* Centra verticalmente los elementos */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .navbar-left {
-    display: flex; 
+    display: flex;
 }
 
-.navbar-left a {
-    color: black;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-}
-
+.navbar-left a,
 .navbar-right a {
     color: black;
     text-align: center;
@@ -43,26 +37,33 @@ body {
     text-decoration: none;
 }
 
-.navbar-right a.logout {
-    padding-right: 20px; 
+.navbar-left a:hover,
+.navbar-right a:hover {
+    background-color: #ddd;
+    color: black;
 }
 
 .navbar a.active {
     background-color: #3498db;
     color: white;
 }
-.navbar a.logout {
-    background-color: #e74c3c;
-    color: white;
+
+.navbar-right {
+    display: flex;
 }
 
-
-.product-form {
-    padding-top: 20px; 
-    padding-bottom: 20px; /* inferior*/
+.navbar-right a.logout {
+    background-color: #e74c3c;
+    color: white;
     padding-right: 20px;
 }
 
+.product-form {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-right: 20px;
+    padding-left: 20px;
+}
 
 .product-action {
     display: flex;
@@ -79,6 +80,18 @@ body {
     font-size: 16px;
 }
 
+.input-action,
+.btn-action,
+.form-group label,
+.input-field {
+    width: 100%;
+}
+
+.input-action {
+    display: inline-block;
+    width: calc(50% - 10px);
+}
+
 .btn-action {
     padding: 10px 15px;
     margin: 0 5px;
@@ -88,41 +101,32 @@ body {
     font-size: 16px;
 }
 
-.add {
+.btn-action.add,
+.btn-action.search,
+.btn-action.edit,
+.btn-action.help,
+.btn-action.cobrar {
     background-color: #3498db;
     color: white;
 }
 
-.search {
-    background-color: #3498db;
-    color: white;
-}
-
-.back {
+.btn-action.delete,
+.btn-action.back,
+.navbar-right a.logout {
     background-color: #e74c3c;
     color: white;
 }
 
-.add:hover {
+.btn-action:hover,
+.cobrar:hover {
     background-color: #2980b9;
 }
 
 .help {
     background-color: #f1c40f;
-    color: white;
 }
 
-.edit {
-    background-color: #3498db;
-    color: white;
-}
-
-.delete {
-    background-color: #e74c3c;
-    color: white;
-}
-
-table {
+.table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
@@ -149,46 +153,24 @@ tr:nth-child(even) {
     border-radius: 0 0 5px 5px;
 }
 
-.cobrar {
-    padding: 10px 20px;
-    font-size: 18px;
-    color: white;
-    background-color: #3498db;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.cobrar:hover {
-    background-color: #2980b9;
-}
-
 .form-group {
-    margin-bottom: 10px; /* Espacio entre las filas  */
+    margin-bottom: 10px;
 }
 
 .form-group label {
-    display: block; /* Asegura que la etiqueta este sobre el campo de entrada */
-    margin-bottom: 5px; /* Espacio entre la etiqueta y el campo de entrada */
+    display: block;
+    margin-bottom: 5px;
     text-align: left;
 }
 
-.input-field {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px; /* Bordes redondeados del campo de entrada */
-    font-size: 16px; /* Tamaño de fuente */
-}
-
 .product-form .action {
-    text-align: center; /* Centra el botón en el contenedor */
-    margin-top: 20px; /* Espacio antes del botón */
+    text-align: center;
+    margin-top: 20px;
 }
 
 .product-form .action .btn-action {
-    width: auto; /* Autoajuste al contenido del botón */
-    padding: 10px 40px; /* Espaciado interno del botón */
+    width: auto;
+    padding: 10px 40px;
 }
 
 td input[type="radio"] {
@@ -198,11 +180,41 @@ td input[type="radio"] {
 }
 
 .lista-miembros {
-    text-align: center; /* Centra el texto de la lista de miembros */
-    padding: 20px; /* Espaciado interior para la lista de miembros */
-    margin-top: 20px; /* Espacio por encima de la lista de miembros */
+    text-align: center;
+    padding: 20px;
+    margin-top: 20px;
 }
 
 .lista-miembros h2 {
-    margin-bottom: 15px; /* Espacio debajo del encabezado de la lista de miembros */
+    margin-bottom: 15px;
+}
+
+.filters-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.form-row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.form-group {
+    flex: 1;
+}
+
+.input-field {
+    width: 100%; /* Asegura que el campo de entrada ocupe toda la columna */
+    padding: 10px;
+    margin-bottom: 10px; /* Espacio solo si es necesario */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Alinea la tabla */
+table {
+    margin-left: auto;
+    margin-right: auto;
+    /* Resto de estilos de la tabla... */
 }
