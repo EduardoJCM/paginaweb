@@ -98,12 +98,23 @@ body {
     color: white;
 }
 
+.back {
+    background-color: #e74c3c;
+    color: white;
+}
+
 .add:hover {
     background-color: #2980b9;
 }
 
-.edit {
+.help {
     background-color: #f1c40f;
+    color: white;
+}
+
+.edit {
+    background-color: #3498db;
+    color: white;
 }
 
 .delete {
@@ -184,4 +195,14 @@ td input[type="radio"] {
     margin-left: auto;
     margin-right: auto;
     display: block;
+}
+
+.lista-miembros {
+    text-align: center; /* Centra el texto de la lista de miembros */
+    padding: 20px; /* Espaciado interior para la lista de miembros */
+    margin-top: 20px; /* Espacio por encima de la lista de miembros */
+}
+
+.lista-miembros h2 {
+    margin-bottom: 15px; /* Espacio debajo del encabezado de la lista de miembros */
 }
