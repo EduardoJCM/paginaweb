@@ -10,52 +10,43 @@
     <div class="content">
         <div class="navbar">
             <div class="navbar-left">
-                <a href="index.html" class="active">Inicio</a>
+                <a href="index.html" >Inicio</a>
                 <a href="gestion-productos.html">Gestión de Productos</a>
                 <a href="ventas.html">Ventas</a>
-                <a href="registro.html">Registro</a>
-                <a href="devolucion.html">Devolución</a>
+                <a href="registro.html" class="active">Registro</a>
             </div>
             <div class="navbar-right">
                 <a href="login.html" class="logout">Cerrar Sesión</a>
             </div>
         </div>
-        
-        <!-- Formulario para filtros de registro -->
-        <!-- ...resto del HTML... -->
         <div class="product-form">
-            <h2>Filtros de Registro</h2>
             <div class="filters-container">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="tipoRegistro">Tipo de Registro:</label>
-                        <select id="tipoRegistro" name="tipoRegistro" class="input-field">
-                            <option value="todos">Todos</option>
-                            <option value="devoluciones">Devoluciones</option>
-                            <option value="ventas">Ventas</option>
-                            <option value="modificaciones">Modificaciones</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="fechaInicio">Desde:</label>
-                        <input type="date" id="fechaInicio" name="fechaInicio" class="input-field">
-                    </div>
+                <div class="form-group">
+                    <label for="tipoRegistro">Tipo de Registro:</label>
+                    <select id="tipoRegistro" name="tipoRegistro" class="input-field">
+                        <option value="todos">Todos</option>
+                        <option value="devoluciones">Devoluciones</option>
+                        <option value="ventas">Ventas</option>
+                        <option value="modificaciones">Modificaciones</option>
+                    </select>
                 </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="fechaFin">Hasta:</label>
-                        <input type="date" id="fechaFin" name="fechaFin" class="input-field">
-                    </div>
-                    <div class="form-group action">
-                        <button class="btn-action search">Buscar</button>
-                    </div>
+                <div class="form-group">
+                    <label for="fechaInicio">Desde:</label>
+                    <input type="date" id="fechaInicio" name="fechaInicio" class="input-field">
+                </div>
+                <div class="form-group">
+                    <label for="fechaFin">Hasta:</label>
+                    <input type="date" id="fechaFin" name="fechaFin" class="input-field">
+                </div>
+                <div class="form-group action">
+                    <button class="btn-action filter">Filtrar</button>
+                </div>
+                <div class="form-group search-group">
+                    <input type="text" placeholder="Buscar registro" name="search" class="input-field">
+                    <button class="btn-action search">Buscar</button>
                 </div>
             </div>
         </div>
-        <!-- ...resto del HTML... -->
-
-
-        <!-- Tabla de registros -->
         <table>
             <thead>
                 <tr>
@@ -66,23 +57,16 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- Los registros irán aquí -->
-                <!-- Ejemplo de fila con datos y botón de imprimir -->
                 <tr>
                     <td>1234</td>
                     <td>Venta</td>
                     <td>2024-03-19</td>
                     <td><button class="btn-action print">Imprimir</button></td>
                 </tr>
-                <!-- Repite las filas para otros registros -->
             </tbody>
         </table>
 
-        <!-- Otras secciones del sitio si son necesarias -->
     </div>
 
-    <div class="footer">
-        <!-- Contenido del pie de página si es necesario -->
-    </div>
 </body>
 </html>
