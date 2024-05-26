@@ -27,6 +27,7 @@ class DAOUsuario {
                 $usuario->correo = $fila['correo'];
                 $usuario->contrasenia = $fila['contrasenia'];
                 $usuario->genero = $fila['genero'];
+                $usuario->rol = $fila['rol'];
                 return $usuario;
             }
         }

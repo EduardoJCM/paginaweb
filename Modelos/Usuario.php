@@ -7,5 +7,6 @@ class Usuario {
     public $correo = "";
     public $contrasenia = "";
     public $genero = "";
+    public $rol = ""; 
 }
 ?>
