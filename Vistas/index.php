@@ -14,7 +14,6 @@
                 <a href="gestion-productos.php">Gestión de Productos</a>
                 <a href="ventas.php">Ventas</a>
                 <a href="registro.php">Registro</a>
-                <a href="devolucion.php">Devolución</a>
             </div>
             <div class="navbar-right">
                 <a href="login.php" class="logout">Cerrar Sesión</a>
