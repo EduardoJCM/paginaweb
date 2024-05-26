@@ -19,6 +19,12 @@ class DAOProducto {
         return $stmt->execute();
     }
 
+    public function obtenerProductos() {
+        $query = "SELECT * FROM productos";
+        $stmt = $this->conn->query($query);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function obtenerProductoPorCodigo($codigo) {
         $query = "SELECT * FROM productos WHERE codigo = :codigo";
         $stmt = $this->conn->prepare($query);

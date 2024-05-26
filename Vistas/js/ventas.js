@@ -1,32 +1,32 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const addButton = document.querySelector(".btn-action.add");
-    const codigoInput = document.querySelector("input[name='codigo']");
-    const cantidadInput = document.querySelector("input[name='cantidad']");
-    const tbody = document.querySelector("tbody");
-    const saveEditButton = document.getElementById("saveEdit");
-    const cobrarButton = document.querySelector(".btn-action.cobrar");
-    const editModalElement = document.getElementById('editModal');
-    const editModal = new bootstrap.Modal(editModalElement, { keyboard: false });
-    let currentEditRow = null;
+    const botonAgregar = document.querySelector(".btn-action.add");
+    const inputCodigo = document.querySelector("input[name='codigo']");
+    const inputCantidad = document.querySelector("input[name='cantidad']");
+    const cuerpoTabla = document.querySelector("tbody");
+    const botonGuardarEdicion = document.getElementById("saveEdit");
+    const botonCobrar = document.querySelector(".btn-action.cobrar");
+    const modalEdicionElement = document.getElementById('editModal');
+    const modalEdicion = new bootstrap.Modal(modalEdicionElement, { keyboard: false });
+    let filaEdicionActual = null;
     let productos = [];
 
     const actualizarTotal = () => {
         let total = 0;
-        const rows = tbody.querySelectorAll('tr');
-        rows.forEach(row => {
-            const importe = parseFloat(row.querySelector('td:nth-child(5)').textContent);
+        const filas = cuerpoTabla.querySelectorAll('tr');
+        filas.forEach(fila => {
+            const importe = parseFloat(fila.querySelector('td:nth-child(5)').textContent);
             total += importe;
         });
-        cobrarButton.textContent = `Cobrar $${total.toFixed(2)}`;
+        botonCobrar.textContent = `Cobrar $${total.toFixed(2)}`;
     };
 
     const realizarVenta = async () => {
-        const rows = tbody.querySelectorAll('tr');
-        for (const row of rows) {
-            const codigo = row.querySelector('td:nth-child(1)').textContent;
-            const cantidadVendida = parseInt(row.querySelector('td:nth-child(4)').textContent);
-            const response = await fetch(`../Datos/DAOProducto.php?codigo=${codigo}`);
-            const producto = await response.json();
+        const filas = cuerpoTabla.querySelectorAll('tr');
+        for (const fila of filas) {
+            const codigo = fila.querySelector('td:nth-child(1)').textContent;
+            const cantidadVendida = parseInt(fila.querySelector('td:nth-child(4)').textContent);
+            const respuesta = await fetch(`../Datos/DAOProducto.php?codigo=${codigo}`);
+            const producto = await respuesta.json();
             const nuevaCantidad = producto.cantidad - cantidadVendida;
 
             if (nuevaCantidad < 0) {
@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 return false;
             }
 
-            const result = await fetch(`../Datos/DAOProducto.php`, {
+            const resultado = await fetch(`../Datos/DAOProducto.php`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -42,19 +42,19 @@ document.addEventListener("DOMContentLoaded", () => {
                 body: JSON.stringify({ codigo: codigo, cantidad: nuevaCantidad })
             });
 
-            const resultData = await result.json();
-            if (!resultData.success) {
+            const datosResultado = await resultado.json();
+            if (!datosResultado.success) {
                 return false;
             }
         }
         return true;
     };
 
-    addButton.addEventListener("click", async (event) => {
+    botonAgregar.addEventListener("click", async (event) => {
         event.preventDefault();
 
-        const codigo = codigoInput.value.trim();
-        const cantidad = parseInt(cantidadInput.value.trim());
+        const codigo = inputCodigo.value.trim();
+        const cantidad = parseInt(inputCantidad.value.trim());
 
         if (codigo === "" || isNaN(cantidad) || cantidad <= 0) {
             alert("Por favor, complete los campos de Código y Cantidad correctamente.");
@@ -62,20 +62,20 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         try {
-            const response = await fetch(`../Datos/DAOProducto.php?codigo=${codigo}`);
-            const producto = await response.json();
+            const respuesta = await fetch(`../Datos/DAOProducto.php?codigo=${codigo}`);
+            const producto = await respuesta.json();
 
             if (producto) {
                 let cantidadTotal = cantidad;
                 let productoExistente = false;
 
-                const rows = tbody.querySelectorAll('tr');
-                rows.forEach(row => {
-                    const rowCodigo = row.querySelector('td').textContent;
-                    if (rowCodigo === codigo) {
+                const filas = cuerpoTabla.querySelectorAll('tr');
+                filas.forEach(fila => {
+                    const filaCodigo = fila.querySelector('td').textContent;
+                    if (filaCodigo === codigo) {
                         productoExistente = true;
-                        const cantidadCell = row.querySelectorAll('td')[3];
-                        cantidadTotal += parseInt(cantidadCell.textContent);
+                        const celdaCantidad = fila.querySelectorAll('td')[3];
+                        cantidadTotal += parseInt(celdaCantidad.textContent);
                     }
                 });
 
@@ -85,14 +85,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
 
                 if (productoExistente) {
-                    rows.forEach(row => {
-                        const rowCodigo = row.querySelector('td').textContent;
-                        if (rowCodigo === codigo) {
-                            const cantidadCell = row.querySelectorAll('td')[3];
-                            const importeCell = row.querySelectorAll('td')[4];
-                            const nuevaCantidad = parseInt(cantidadCell.textContent) + cantidad;
-                            cantidadCell.textContent = nuevaCantidad;
-                            importeCell.textContent = (producto.precio * nuevaCantidad).toFixed(2);
+                    filas.forEach(fila => {
+                        const filaCodigo = fila.querySelector('td').textContent;
+                        if (filaCodigo === codigo) {
+                            const celdaCantidad = fila.querySelectorAll('td')[3];
+                            const celdaImporte = fila.querySelectorAll('td')[4];
+                            const nuevaCantidad = parseInt(celdaCantidad.textContent) + cantidad;
+                            celdaCantidad.textContent = nuevaCantidad;
+                            celdaImporte.textContent = (producto.precio * nuevaCantidad).toFixed(2);
                         }
                     });
                 } else {
@@ -101,8 +101,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     producto.importe = (producto.precio * cantidad).toFixed(2);
                     productos.push(producto);
 
-                    const row = document.createElement("tr");
-                    row.innerHTML = `
+                    const fila = document.createElement("tr");
+                    fila.innerHTML = `
                         <td>${producto.codigo}</td>
                         <td>${producto.nombre}</td>
                         <td>${producto.precio}</td>
@@ -113,11 +113,11 @@ document.addEventListener("DOMContentLoaded", () => {
                         <td><button class="btn-action delete">Eliminar</button></td>
                     `;
 
-                    tbody.appendChild(row);
+                    cuerpoTabla.appendChild(fila);
                 }
 
-                codigoInput.value = "";
-                cantidadInput.value = "";
+                inputCodigo.value = "";
+                inputCantidad.value = "";
                 actualizarTotal();
             } else {
                 alert("Producto no encontrado.");
@@ -128,28 +128,28 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    tbody.addEventListener("click", (event) => {
+    cuerpoTabla.addEventListener("click", (event) => {
         if (event.target.classList.contains("edit")) {
-            const row = event.target.closest("tr");
-            const codigo = row.querySelector("td:nth-child(1)").textContent;
-            const nombre = row.querySelector("td:nth-child(2)").textContent;
-            const precio = row.querySelector("td:nth-child(3)").textContent;
-            const cantidad = row.querySelector("td:nth-child(4)").textContent;
+            const fila = event.target.closest("tr");
+            const codigo = fila.querySelector("td:nth-child(1)").textContent;
+            const nombre = fila.querySelector("td:nth-child(2)").textContent;
+            const precio = fila.querySelector("td:nth-child(3)").textContent;
+            const cantidad = fila.querySelector("td:nth-child(4)").textContent;
 
             document.getElementById("editCodigo").value = codigo;
             document.getElementById("editNombre").value = nombre;
             document.getElementById("editPrecio").value = precio;
             document.getElementById("editCantidad").value = cantidad;
 
-            currentEditRow = row;
+            filaEdicionActual = fila;
         }
 
         if (event.target.classList.contains("delete")) {
-            const row = event.target.closest("tr");
-            const codigo = row.querySelector("td:nth-child(1)").textContent;
+            const fila = event.target.closest("tr");
+            const codigo = fila.querySelector("td:nth-child(1)").textContent;
 
             if (confirm(`¿Está seguro de que desea eliminar el producto con código ${codigo}?`)) {
-                tbody.removeChild(row);
+                cuerpoTabla.removeChild(fila);
 
                 productos = productos.filter(producto => producto.codigo !== codigo);
                 actualizarTotal();
@@ -157,7 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    saveEditButton.addEventListener("click", async () => {
+    botonGuardarEdicion.addEventListener("click", async () => {
         const codigo = document.getElementById("editCodigo").value;
         const nuevaCantidad = parseInt(document.getElementById("editCantidad").value);
 
@@ -166,8 +166,8 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        const response = await fetch(`../Datos/DAOProducto.php?codigo=${codigo}`);
-        const producto = await response.json();
+        const respuesta = await fetch(`../Datos/DAOProducto.php?codigo=${codigo}`);
+        const producto = await respuesta.json();
 
         if (nuevaCantidad > producto.cantidad) {
             alert(`No puede exceder la cantidad disponible de ${producto.cantidad}.`);
@@ -176,22 +176,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const importe = (producto.precio * nuevaCantidad).toFixed(2);
 
-        currentEditRow.querySelector("td:nth-child(4)").textContent = nuevaCantidad;
-        currentEditRow.querySelector("td:nth-child(5)").textContent = importe;
+        filaEdicionActual.querySelector("td:nth-child(4)").textContent = nuevaCantidad;
+        filaEdicionActual.querySelector("td:nth-child(5)").textContent = importe;
 
         const productoEnLista = productos.find(p => p.codigo === codigo);
         productoEnLista.cantidad = nuevaCantidad;
         productoEnLista.importe = importe;
         actualizarTotal();
 
-        editModal.hide();
+        modalEdicion.hide();
     });
 
-    cobrarButton.addEventListener("click", async () => {
+    botonCobrar.addEventListener("click", async () => {
         if (confirm("¿Desea realizar la venta?")) {
             const ventaExitosa = await realizarVenta();
             if (ventaExitosa) {
-                tbody.innerHTML = "";
+                cuerpoTabla.innerHTML = "";
                 actualizarTotal();
                 alert("Venta realizada con éxito.");
             } else {
@@ -200,5 +200,5 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    editModalElement.addEventListener('hidden.bs.modal', actualizarTotal);
+    modalEdicionElement.addEventListener('hidden.bs.modal', actualizarTotal);
 });
