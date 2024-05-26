@@ -1,3 +1,10 @@
+<?php
+require_once __DIR__ . '/../Datos/DAOProducto.php';
+
+$daoProducto = new DAOProducto();
+$productos = $daoProducto->obtenerProductos();
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -5,12 +12,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Página de Inicio - El Almacén de Don Sil</title>
     <link rel="stylesheet" href="css/index.css">
+    <script src="js/ventas.js" defer></script>
 </head>
 <body>
     <div class="content">
         <div class="navbar">
             <div class="navbar-left">
-                <a href="index.php" >Inicio</a>
+                <a href="index.php">Inicio</a>
                 <a href="gestion-productos.php">Gestión de Productos</a>
                 <a href="ventas.php" class="active">Ventas</a>
                 <a href="registro.php">Registro</a>
@@ -21,12 +29,14 @@
         </div>
         
         <div class="product-form">
-            <div class="product-action">
-                <input type="text" placeholder="Código" name="codigo" class="input-action">
-                <input type="number" placeholder="Cantidad" name="cantidad" class="input-action quantity">
-                <button class="btn-action add">Agregar</button>
-            </div>
-            <!-- La tabla para las ventas -->
+            <form>
+                <div class="product-action">
+                    <input type="number" placeholder="Código" name="codigo" class="input-action" required>
+                    <input type="number" placeholder="Cantidad" name="cantidad" class="input-action quantity" required>
+                    <button class="btn-action add">Agregar</button>
+                </div>
+            </form>
+            <!-- La tabla para los productos -->
             <table>
                 <thead>
                     <tr>
@@ -41,16 +51,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>0001</td>
-                        <td>Producto Ejemplo</td>
-                        <td>$10.00</td>
-                        <td>1</td>
-                        <td>$10.00</td>
-                        <td><button class="btn-action help">Ayuda</button></td>
-                        <td><button class="btn-action edit">Editar</button></td>
-                        <td><button class="btn-action delete">Eliminar</button></td>
-                    </tr>
+                    <!-- Productos serán agregados dinámicamente con JavaScript -->
                 </tbody>
             </table>
         </div>
