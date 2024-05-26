@@ -10,13 +10,13 @@
     <div class="content">
         <div class="navbar">
             <div class="navbar-left">
-                <a href="index.html" >Inicio</a>
-                <a href="gestion-productos.html">Gestión de Productos</a>
-                <a href="ventas.html" class="active">Ventas</a>
-                <a href="registro.html">Registro</a>
+                <a href="index.php" >Inicio</a>
+                <a href="gestion-productos.php">Gestión de Productos</a>
+                <a href="ventas.php" class="active">Ventas</a>
+                <a href="registro.php">Registro</a>
             </div>
             <div class="navbar-right">
-                <a href="login.html" class="logout">Cerrar Sesión</a>
+                <a href="login.php" class="logout">Cerrar Sesión</a>
             </div>
         </div>
         

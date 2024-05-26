@@ -10,14 +10,14 @@
     <div class="content">
         <div class="navbar">
             <div class="navbar-left">
-                <a href="index.html" class="active">Inicio</a>
-                <a href="gestion-productos.html">Gestión de Productos</a>
-                <a href="ventas.html">Ventas</a>
-                <a href="registro.html">Registro</a>
-                <a href="devolucion.html">Devolución</a>
+                <a href="index.php" class="active">Inicio</a>
+                <a href="gestion-productos.php">Gestión de Productos</a>
+                <a href="ventas.php">Ventas</a>
+                <a href="registro.php">Registro</a>
+                <a href="devolucion.php">Devolución</a>
             </div>
             <div class="navbar-right">
-                <a href="login.html" class="logout">Cerrar Sesión</a>
+                <a href="login.php" class="logout">Cerrar Sesión</a>
             </div>
         </div>
         <div class="lista-miembros">

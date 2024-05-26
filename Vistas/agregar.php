@@ -10,13 +10,13 @@
     <div class="content">
         <div class="navbar">
             <div class="navbar-left">
-                <a href="index.html" >Inicio</a>
-                <a href="gestion-productos.html" class="active">Gestión de Productos</a>
-                <a href="ventas.html">Ventas</a>
-                <a href="registro.html" >Registro</a>
+                <a href="index.php" >Inicio</a>
+                <a href="gestion-productos.php" class="active">Gestión de Productos</a>
+                <a href="ventas.php">Ventas</a>
+                <a href="registro.php" >Registro</a>
             </div>
             <div class="navbar-right">
-                <a href="login.html" class="logout">Cerrar Sesión</a>
+                <a href="login.php" class="logout">Cerrar Sesión</a>
             </div>
         </div>
 
@@ -46,8 +46,8 @@
                 <input type="number" id="cantidad_mayoreo" name="cantidad_mayoreo" class="input-field">
             </div>
             <div class="form-group action">
-                <a href="gestion-productos.html"><button class="btn-action add">Guardar</button></a>
-                <a href="gestion-productos.html"><button class="btn-action back">Atras</button></a>
+                <a href="gestion-productos.php"><button class="btn-action add">Guardar</button></a>
+                <a href="gestion-productos.php"><button class="btn-action back">Atras</button></a>
             </div>
         </div>
     </div>
