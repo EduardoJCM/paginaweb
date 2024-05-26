@@ -33,6 +33,14 @@ class DAOProducto {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    public function actualizarCantidadProducto($codigo, $cantidad) {
+        $query = "UPDATE productos SET cantidad = :cantidad WHERE codigo = :codigo";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':codigo', $codigo);
+        $stmt->bindParam(':cantidad', $cantidad);
+        return $stmt->execute();
+    }
+
     public function buscarProducto($codigo) {
         header('Content-Type: application/json');
         $producto = $this->obtenerProductoPorCodigo($codigo);
@@ -40,8 +48,15 @@ class DAOProducto {
     }
 }
 
-if (isset($_GET['codigo'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['codigo'])) {
     $daoProducto = new DAOProducto();
     $daoProducto->buscarProducto($_GET['codigo']);
+} elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $data = json_decode(file_get_contents('php://input'), true);
+    $daoProducto = new DAOProducto();
+    $codigo = $data['codigo'];
+    $cantidad = $data['cantidad'];
+    $result = $daoProducto->actualizarCantidadProducto($codigo, $cantidad);
+    echo json_encode(['success' => $result]);
 }
 ?>
