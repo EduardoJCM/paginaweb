@@ -71,6 +71,14 @@ class DAOProducto {
         echo json_encode($productos);
     }
 
+    public function actualizarCantidadProducto($codigo, $nuevaCantidad) {
+        $query = "UPDATE productos SET cantidad = :cantidad WHERE codigo = :codigo";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':cantidad', $nuevaCantidad);
+        $stmt->bindParam(':codigo', $codigo);
+        return $stmt->execute() ? ['success' => true] : ['success' => false];
+    }
+
     private function existeCodigo($codigo, $id = null) {
         $query = "SELECT * FROM productos WHERE codigo = :codigo";
         if ($id) {
@@ -96,7 +104,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = json_decode(file_get_contents('php://input'), true);
-    $result = $daoProducto->insertarProducto($data);
+    if (isset($data['codigo']) && isset($data['cantidad'])) {
+        $result = $daoProducto->actualizarCantidadProducto($data['codigo'], $data['cantidad']);
+    } else {
+        $result = $daoProducto->insertarProducto($data);
+    }
     echo json_encode($result);
 } elseif ($_SERVER['REQUEST_METHOD'] === 'PUT') {
     $data = json_decode(file_get_contents('php://input'), true);

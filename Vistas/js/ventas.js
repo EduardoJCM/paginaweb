@@ -27,7 +27,11 @@ document.addEventListener("DOMContentLoaded", () => {
             const cantidadVendida = parseInt(fila.querySelector('td:nth-child(4)').textContent);
             const respuesta = await fetch(`../Datos/DAOProducto.php?codigo=${codigo}`);
             const producto = await respuesta.json();
-            const nuevaCantidad = producto.cantidad - cantidadVendida;
+            if (!producto || producto.length === 0) {
+                alert(`Producto con código ${codigo} no encontrado`);
+                return false;
+            }
+            const nuevaCantidad = producto[0].cantidad - cantidadVendida;
 
             if (nuevaCantidad < 0) {
                 alert(`No hay suficiente stock para el producto con código ${codigo}`);
@@ -65,7 +69,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const respuesta = await fetch(`../Datos/DAOProducto.php?codigo=${codigo}`);
             const producto = await respuesta.json();
 
-            if (producto) {
+            if (producto && producto.length > 0) {
+                const productoEncontrado = producto[0];
                 let cantidadTotal = cantidad;
                 let productoExistente = false;
 
@@ -79,8 +84,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                 });
 
-                if (cantidadTotal > producto.cantidad) {
-                    alert(`No puede agregar más de ${producto.cantidad} unidades de este producto.`);
+                if (cantidadTotal > productoEncontrado.cantidad) {
+                    alert(`No puede agregar más de ${productoEncontrado.cantidad} unidades de este producto.`);
                     return;
                 }
 
@@ -92,22 +97,22 @@ document.addEventListener("DOMContentLoaded", () => {
                             const celdaImporte = fila.querySelectorAll('td')[4];
                             const nuevaCantidad = parseInt(celdaCantidad.textContent) + cantidad;
                             celdaCantidad.textContent = nuevaCantidad;
-                            celdaImporte.textContent = (producto.precio * nuevaCantidad).toFixed(2);
+                            celdaImporte.textContent = (productoEncontrado.precio * nuevaCantidad).toFixed(2);
                         }
                     });
                 } else {
-                    producto.cantidadDisponible = producto.cantidad;
-                    producto.cantidad = cantidad;
-                    producto.importe = (producto.precio * cantidad).toFixed(2);
-                    productos.push(producto);
+                    productoEncontrado.cantidadDisponible = productoEncontrado.cantidad;
+                    productoEncontrado.cantidad = cantidad;
+                    productoEncontrado.importe = (productoEncontrado.precio * cantidad).toFixed(2);
+                    productos.push(productoEncontrado);
 
                     const fila = document.createElement("tr");
                     fila.innerHTML = `
-                        <td>${producto.codigo}</td>
-                        <td>${producto.nombre}</td>
-                        <td>${producto.precio}</td>
-                        <td>${producto.cantidad}</td>
-                        <td>${producto.importe}</td>
+                        <td>${productoEncontrado.codigo}</td>
+                        <td>${productoEncontrado.nombre}</td>
+                        <td>${productoEncontrado.precio}</td>
+                        <td>${productoEncontrado.cantidad}</td>
+                        <td>${productoEncontrado.importe}</td>
                         <td><button class="btn-action help">Ayuda</button></td>
                         <td><button class="btn-action edit" data-bs-toggle="modal" data-bs-target="#editModal">Editar</button></td>
                         <td><button class="btn-action delete">Eliminar</button></td>
@@ -169,22 +174,28 @@ document.addEventListener("DOMContentLoaded", () => {
         const respuesta = await fetch(`../Datos/DAOProducto.php?codigo=${codigo}`);
         const producto = await respuesta.json();
 
-        if (nuevaCantidad > producto.cantidad) {
-            alert(`No puede exceder la cantidad disponible de ${producto.cantidad}.`);
-            return;
+        if (producto && producto.length > 0) {
+            const productoEncontrado = producto[0];
+
+            if (nuevaCantidad > productoEncontrado.cantidad) {
+                alert(`No puede exceder la cantidad disponible de ${productoEncontrado.cantidad}.`);
+                return;
+            }
+
+            const importe = (productoEncontrado.precio * nuevaCantidad).toFixed(2);
+
+            filaEdicionActual.querySelector("td:nth-child(4)").textContent = nuevaCantidad;
+            filaEdicionActual.querySelector("td:nth-child(5)").textContent = importe;
+
+            const productoEnLista = productos.find(p => p.codigo === codigo);
+            productoEnLista.cantidad = nuevaCantidad;
+            productoEnLista.importe = importe;
+            actualizarTotal();
+
+            modalEdicion.hide();
+        } else {
+            alert("Producto no encontrado.");
         }
-
-        const importe = (producto.precio * nuevaCantidad).toFixed(2);
-
-        filaEdicionActual.querySelector("td:nth-child(4)").textContent = nuevaCantidad;
-        filaEdicionActual.querySelector("td:nth-child(5)").textContent = importe;
-
-        const productoEnLista = productos.find(p => p.codigo === codigo);
-        productoEnLista.cantidad = nuevaCantidad;
-        productoEnLista.importe = importe;
-        actualizarTotal();
-
-        modalEdicion.hide();
     });
 
     botonCobrar.addEventListener("click", async () => {
