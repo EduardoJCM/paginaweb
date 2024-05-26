@@ -28,11 +28,10 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Código</th>
+                        <th>ID</th>
+                        <th>Codigo</th>
                         <th>Nombre</th>
                         <th>Precio</th>
-                        <th>Cant. Mín. Mayoreo</th>
-                        <th>Precio Mayoreo</th>
                         <th>Existencias</th>
                         <th>Editar</th>
                         <th>Eliminar</th>
@@ -40,13 +39,11 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>0001</td>
-                        <td>Producto Ejemplo</td>
-                        <td>$10.00</td>
-                        
-                        <td>10</td>
-                        <td>$7.00</td>
-                        <td>20</td>
+                        <td>1</td>
+                        <td>1234567890123</td>
+                        <td>Coca Cola 3L</td>        
+                        <td>35.00</td>
+                        <td>48</td>
                         <td><button class="btn-action edit">Editar</button></td>
                         <td><button class="btn-action delete">Eliminar</button></td>
                     </tr>
