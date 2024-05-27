@@ -9,14 +9,11 @@ class DAOProducto {
         $this->conn = (new Conexion())->conectar();
     }
 
-    // Inserta un nuevo producto en la base de datos
     public function insertarProducto($producto) {
-        // Verifica si el código del producto ya existe
         if ($this->existeCodigo($producto['codigo'])) {
             return ['success' => false, 'message' => 'Código duplicado'];
         }
 
-        // Prepara la consulta para insertar un producto nuevo
         $query = "INSERT INTO productos (codigo, nombre, precio, cantidad) VALUES (:codigo, :nombre, :precio, :cantidad)";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':codigo', $producto['codigo']);
@@ -26,14 +23,12 @@ class DAOProducto {
         return $stmt->execute() ? ['success' => true] : ['success' => false];
     }
 
-    // Obtiene todos los productos de la base de datos
     public function obtenerProductos() {
         $query = "SELECT * FROM productos";
         $stmt = $this->conn->query($query);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Obtiene productos por un código parcial
     public function obtenerProductoPorCodigo($codigo) {
         $query = "SELECT * FROM productos WHERE codigo LIKE :codigo";
         $stmt = $this->conn->prepare($query);
@@ -43,14 +38,11 @@ class DAOProducto {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Actualiza un producto existente en la base de datos
     public function actualizarProducto($producto) {
-        // Verifica si el código del producto ya existe en otro producto
         if ($this->existeCodigo($producto['codigo'], $producto['id'])) {
             return ['success' => false, 'message' => 'Código duplicado'];
         }
 
-        // Prepara la consulta para actualizar un producto
         $query = "UPDATE productos SET nombre = :nombre, precio = :precio, cantidad = :cantidad WHERE id = :id";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':id', $producto['id']);
@@ -60,7 +52,6 @@ class DAOProducto {
         return $stmt->execute() ? ['success' => true] : ['success' => false];
     }
 
-    // Elimina un producto de la base de datos
     public function eliminarProducto($id) {
         $query = "DELETE FROM productos WHERE id = :id";
         $stmt = $this->conn->prepare($query);
@@ -68,21 +59,18 @@ class DAOProducto {
         return $stmt->execute() ? ['success' => true] : ['success' => false];
     }
 
-    // Busca productos por un código parcial y retorna como JSON
     public function buscarProducto($codigo) {
         header('Content-Type: application/json');
         $productos = $this->obtenerProductoPorCodigo($codigo);
         echo json_encode($productos);
     }
 
-    // Obtiene todos los productos y retorna como JSON
     public function obtenerTodosLosProductos() {
         header('Content-Type: application/json');
         $productos = $this->obtenerProductos();
         echo json_encode($productos);
     }
 
-    // Actualiza la cantidad de un producto en la base de datos
     public function actualizarCantidadProducto($codigo, $nuevaCantidad) {
         $query = "UPDATE productos SET cantidad = :cantidad WHERE codigo = :codigo";
         $stmt = $this->conn->prepare($query);
@@ -91,7 +79,6 @@ class DAOProducto {
         return $stmt->execute() ? ['success' => true] : ['success' => false];
     }
 
-    // Verifica si un código de producto ya existe en la base de datos
     private function existeCodigo($codigo, $id = null) {
         $query = "SELECT * FROM productos WHERE codigo = :codigo";
         if ($id) {
@@ -104,6 +91,47 @@ class DAOProducto {
         }
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC) !== false;
+    }
+
+    public function registrarVentaCompleta($productosVenta, $totalVenta) {
+        try {
+            $this->conn->beginTransaction();
+
+            // Registrar venta
+            $queryVenta = "INSERT INTO ventas (total) VALUES (:total)";
+            $stmtVenta = $this->conn->prepare($queryVenta);
+            $stmtVenta->bindParam(':total', $totalVenta);
+            $stmtVenta->execute();
+            $ventaId = $this->conn->lastInsertId();
+
+            // Registrar detalles de la venta
+            $queryDetalle = "INSERT INTO detalle_ventas (venta_id, producto_id, nombre_producto, cantidad, precio, total) 
+                             VALUES (:venta_id, :producto_id, :nombre_producto, :cantidad, :precio, :total)";
+            $stmtDetalle = $this->conn->prepare($queryDetalle);
+
+            foreach ($productosVenta as $producto) {
+                $stmtDetalle->bindParam(':venta_id', $ventaId);
+                $stmtDetalle->bindParam(':producto_id', $producto['producto_id']);
+                $stmtDetalle->bindParam(':nombre_producto', $producto['nombre_producto']);
+                $stmtDetalle->bindParam(':cantidad', $producto['cantidad']);
+                $stmtDetalle->bindParam(':precio', $producto['precio']);
+                $stmtDetalle->bindParam(':total', $producto['total']);
+                $stmtDetalle->execute();
+
+                // Actualizar cantidad del producto
+                $queryActualizar = "UPDATE productos SET cantidad = cantidad - :cantidad WHERE id = :producto_id";
+                $stmtActualizar = $this->conn->prepare($queryActualizar);
+                $stmtActualizar->bindParam(':cantidad', $producto['cantidad']);
+                $stmtActualizar->bindParam(':producto_id', $producto['producto_id']);
+                $stmtActualizar->execute();
+            }
+
+            $this->conn->commit();
+            return ['success' => true];
+        } catch (Exception $e) {
+            $this->conn->rollBack();
+            return ['success' => false, 'message' => $e->getMessage()];
+        }
     }
 }
 
@@ -118,8 +146,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = json_decode(file_get_contents('php://input'), true);
-    if (isset($data['codigo']) && isset($data['cantidad'])) {
-        $result = $daoProducto->actualizarCantidadProducto($data['codigo'], $data['cantidad']);
+    if (isset($data['productos']) && isset($data['total'])) {
+        $result = $daoProducto->registrarVentaCompleta($data['productos'], $data['total']);
     } else {
         $result = $daoProducto->insertarProducto($data);
     }
