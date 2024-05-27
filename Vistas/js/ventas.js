@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
+    // Selección de elementos del DOM
     const botonAgregar = document.querySelector(".btn-action.add");
     const inputCodigo = document.querySelector("input[name='codigo']");
     const inputCantidad = document.querySelector("input[name='cantidad']");
@@ -10,34 +11,47 @@ document.addEventListener("DOMContentLoaded", () => {
     let filaEdicionActual = null;
     let productos = [];
 
+    // Actualiza el total a cobrar
     const actualizarTotal = () => {
         let total = 0;
         const filas = cuerpoTabla.querySelectorAll('tr');
         filas.forEach(fila => {
+            // Obtiene el importe de cada fila y lo suma al total
             const importe = parseFloat(fila.querySelector('td:nth-child(5)').textContent);
             total += importe;
         });
+        // Actualiza el texto del botón de cobrar con el total calculado
         botonCobrar.textContent = `Cobrar $${total.toFixed(2)}`;
     };
 
+    // Realiza la venta y actualiza la cantidad de productos en la base de datos
     const realizarVenta = async () => {
         const filas = cuerpoTabla.querySelectorAll('tr');
         for (const fila of filas) {
+            // Obtiene el código y la cantidad vendida de cada fila
             const codigo = fila.querySelector('td:nth-child(1)').textContent;
             const cantidadVendida = parseInt(fila.querySelector('td:nth-child(4)').textContent);
+
+            // Obtiene la información del producto desde el servidor
             const respuesta = await fetch(`../Datos/DAOProducto.php?codigo=${codigo}`);
             const producto = await respuesta.json();
+
+            // Verifica si el producto existe
             if (!producto || producto.length === 0) {
                 alert(`Producto con código ${codigo} no encontrado`);
                 return false;
             }
+
+            // Calcula la nueva cantidad después de la venta
             const nuevaCantidad = producto[0].cantidad - cantidadVendida;
 
+            // Verifica si hay suficiente stock
             if (nuevaCantidad < 0) {
                 alert(`No hay suficiente stock para el producto con código ${codigo}`);
                 return false;
             }
 
+            // Actualiza la cantidad del producto en la base de datos
             const resultado = await fetch(`../Datos/DAOProducto.php`, {
                 method: 'POST',
                 headers: {
@@ -54,18 +68,22 @@ document.addEventListener("DOMContentLoaded", () => {
         return true;
     };
 
+    // Evento al hacer clic en el botón Agregar
     botonAgregar.addEventListener("click", async (event) => {
         event.preventDefault();
 
+        // Obtiene el código y la cantidad ingresados por el usuario
         const codigo = inputCodigo.value.trim();
         const cantidad = parseInt(inputCantidad.value.trim());
 
+        // Verifica si los campos están correctamente completados
         if (codigo === "" || isNaN(cantidad) || cantidad <= 0) {
             alert("Por favor, complete los campos de Código y Cantidad correctamente.");
             return;
         }
 
         try {
+            // Obtiene la información del producto desde el servidor
             const respuesta = await fetch(`../Datos/DAOProducto.php?codigo=${codigo}`);
             const producto = await respuesta.json();
 
@@ -77,6 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const filas = cuerpoTabla.querySelectorAll('tr');
                 filas.forEach(fila => {
                     const filaCodigo = fila.querySelector('td').textContent;
+                    // Verifica si el producto ya existe en la tabla
                     if (filaCodigo === codigo) {
                         productoExistente = true;
                         const celdaCantidad = fila.querySelectorAll('td')[3];
@@ -84,12 +103,14 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                 });
 
+                // Verifica si la cantidad total excede el stock disponible
                 if (cantidadTotal > productoEncontrado.cantidad) {
                     alert(`No puede agregar más de ${productoEncontrado.cantidad} unidades de este producto.`);
                     return;
                 }
 
                 if (productoExistente) {
+                    // Si el producto ya existe, actualiza la cantidad y el importe
                     filas.forEach(fila => {
                         const filaCodigo = fila.querySelector('td').textContent;
                         if (filaCodigo === codigo) {
@@ -101,6 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         }
                     });
                 } else {
+                    // Si el producto no existe, agrega una nueva fila a la tabla
                     productoEncontrado.cantidadDisponible = productoEncontrado.cantidad;
                     productoEncontrado.cantidad = cantidad;
                     productoEncontrado.importe = (productoEncontrado.precio * cantidad).toFixed(2);
@@ -121,6 +143,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     cuerpoTabla.appendChild(fila);
                 }
 
+                // Limpia los campos de entrada y actualiza el total
                 inputCodigo.value = "";
                 inputCantidad.value = "";
                 actualizarTotal();
@@ -133,6 +156,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    // Manejo de eventos para edición y eliminación
     cuerpoTabla.addEventListener("click", (event) => {
         if (event.target.classList.contains("edit")) {
             const fila = event.target.closest("tr");
@@ -141,6 +165,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const precio = fila.querySelector("td:nth-child(3)").textContent;
             const cantidad = fila.querySelector("td:nth-child(4)").textContent;
 
+            // Carga los datos del producto en el modal de edición
             document.getElementById("editCodigo").value = codigo;
             document.getElementById("editNombre").value = nombre;
             document.getElementById("editPrecio").value = precio;
@@ -153,51 +178,63 @@ document.addEventListener("DOMContentLoaded", () => {
             const fila = event.target.closest("tr");
             const codigo = fila.querySelector("td:nth-child(1)").textContent;
 
+            // Confirma la eliminación del producto
             if (confirm(`¿Está seguro de que desea eliminar el producto con código ${codigo}?`)) {
                 cuerpoTabla.removeChild(fila);
 
+                // Elimina el producto de la lista de productos
                 productos = productos.filter(producto => producto.codigo !== codigo);
                 actualizarTotal();
             }
         }
     });
 
+    // Guardar cambios después de editar un producto
     botonGuardarEdicion.addEventListener("click", async () => {
         const codigo = document.getElementById("editCodigo").value;
         const nuevaCantidad = parseInt(document.getElementById("editCantidad").value);
 
+        // Verifica si la nueva cantidad es válida
         if (isNaN(nuevaCantidad) || nuevaCantidad <= 0) {
             alert("Por favor, ingrese una cantidad válida.");
             return;
         }
 
+        // Obtiene la información del producto desde el servidor
         const respuesta = await fetch(`../Datos/DAOProducto.php?codigo=${codigo}`);
         const producto = await respuesta.json();
 
+        // Verifica si el producto existe
         if (producto && producto.length > 0) {
             const productoEncontrado = producto[0];
 
+            // Verifica si la nueva cantidad excede el stock disponible
             if (nuevaCantidad > productoEncontrado.cantidad) {
                 alert(`No puede exceder la cantidad disponible de ${productoEncontrado.cantidad}.`);
                 return;
             }
 
+            // Calcula el nuevo importe
             const importe = (productoEncontrado.precio * nuevaCantidad).toFixed(2);
 
+            // Actualiza la fila en la tabla
             filaEdicionActual.querySelector("td:nth-child(4)").textContent = nuevaCantidad;
             filaEdicionActual.querySelector("td:nth-child(5)").textContent = importe;
 
+            // Actualiza el producto en la lista de productos
             const productoEnLista = productos.find(p => p.codigo === codigo);
             productoEnLista.cantidad = nuevaCantidad;
             productoEnLista.importe = importe;
             actualizarTotal();
 
+            // Cierra el modal de edición
             modalEdicion.hide();
         } else {
             alert("Producto no encontrado.");
         }
     });
 
+    // Evento para el botón de cobrar
     botonCobrar.addEventListener("click", async () => {
         if (confirm("¿Desea realizar la venta?")) {
             const ventaExitosa = await realizarVenta();
@@ -211,5 +248,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    // Evento que se dispara cuando se oculta el modal de edición
     modalEdicionElement.addEventListener('hidden.bs.modal', actualizarTotal);
 });
